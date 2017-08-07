@@ -1,7 +1,7 @@
 'use strict';
 const streamify = require('stream-array');
 const fs = require('fs');
-const eol = require('eol').EOL;
+const eol = require('os').EOL;
 
 const stringifyItem = (item) => JSON.stringify(item);
 const stringifyArray = (data) => {
@@ -14,7 +14,7 @@ const stringifyArray = (data) => {
 	return result;
 }
 
-module.exports = (input, path) => {
+module.exports = (input, path, opts) => {
 	const readStream = streamify(stringifyArray(input))
 	return !path ? readStream : readStream.pipe(fs.createWriteStream(path));
 };
