@@ -1,6 +1,6 @@
 # array-to-ndjson [![Build Status](https://travis-ci.org/SimonJang/array-to-ndjson.svg?branch=master)](https://travis-ci.org/SimonJang/array-to-ndjson)
 
-> Convert an array of objects to a stream of [ndjson](http://ndjson.org/)
+> Convert an array of objects to a stream of [ndjson](http://ndjson.org/) data.
 
 
 ## Install
@@ -15,30 +15,28 @@ $ npm install array-to-ndjson
 ```js
 const arrayToNdjson = require('array-to-ndjson');
 
-arrayToNdjson('unicorns');
-//=> 'unicorns & rainbows'
-```
+arrayToNdjson([{name: 'Foo', value: 10}]);
+	// => Readable Stream
 
+
+// Example piping the stream
+
+arrayToNdjson([{name: 'Foo', value: 10}, {name: 'Bar', value: 9}]).pipe(fs.createWriteStream('foo.json'))
+	// => File will contain:
+	// {"name":"Foo","value":10}
+	// {"name":"Bar","value":9}
+
+```
 
 ## API
 
-### arrayToNdjson(input, [options])
+### arrayToNdjson(input)
 
 #### input
 
-Type: `string`
+Type: `Object[]`
 
-Lorem ipsum.
-
-#### options
-
-##### foo
-
-Type: `boolean`<br>
-Default: `false`
-
-Lorem ipsum.
-
+Array of objects that you want to convert to NDJSON format.
 
 ## License
 
