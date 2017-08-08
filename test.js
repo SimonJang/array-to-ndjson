@@ -24,6 +24,16 @@ const objects = [
 const directory = tempy.directory()
 const file = path.join(directory, 'test.json')
 
+test.failing('should fail due to invalid arguments', async t => {
+	const badArray1 = ['bla', 1];
+	const badArray2 = [{ name: 'Smart Object', do: (item) => console.log(item)}]
+
+	// t.throws(m(badArray1));
+	// t.throws(m(badArray2));
+	// t.throws(m(objects, 'foo/bad/path'))
+
+})
+
 test('should return a readstream of ndjson qualified objects', async t => {
 	const arrayStream = m(objects)
 
@@ -39,8 +49,7 @@ test('should return a readstream of ndjson qualified objects', async t => {
 });
 
 test('should write to a file when path is given', async t => {
-	const writeStream = fs.createWriteStream(file);
-	await m(objects, file);
+	m(objects, file);
 
 	t.true(fs.existsSync(file));
 
