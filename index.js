@@ -14,7 +14,7 @@ const stringifyArray = (data) => {
 	return result;
 }
 
-module.exports = (input, path, opts) => {
+module.exports = (input, path) => {
 	const readStream = streamify(stringifyArray(input))
 	return !path ? readStream : readStream.pipe(fs.createWriteStream(path));
 };

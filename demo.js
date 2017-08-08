@@ -1,5 +1,6 @@
 const m = require('./index.js');
 const fs = require('fs');
+const zlib = require('zlib');
 
 const objects = [
 		{
@@ -17,3 +18,5 @@ const objects = [
 	]
 
 m(objects).pipe(fs.createWriteStream('demo.json'));
+m(objects, 'demo2.json');
+m(objects).pipe(zlib.createGzip()).pipe(fs.createWriteStream('demo.json.gz'));
