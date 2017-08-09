@@ -21,8 +21,10 @@ arrayToNdjson([{name: 'Foo', value: 10}]);
 
 // Example piping the stream
 
-arrayToNdjson([{name: 'Foo', value: 10}, {name: 'Bar', value: 9}]).pipe(fs.createWriteStream('foo.json'))
+arrayToNdjson([{name: 'Foo', value: 10}, {name: 'Bar', value: 9}])
+	.pipe(fs.createWriteStream('foo.json'))
 	// => File will contain:
+	//
 	// {"name":"Foo","value":10}
 	// {"name":"Bar","value":9}
 
