@@ -1,6 +1,6 @@
 {
   "name": "array-to-ndjson",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Convert an array of objects to ndjson format",
   "license": "MIT",
   "repository": "SimonJang/array-to-ndjson",
@@ -19,11 +19,11 @@
     "index.js"
   ],
   "keywords": [
-		"array",
-		"object",
-		"ndjson",
-		"stream",
-		"file"
+    "array",
+    "object",
+    "ndjson",
+    "stream",
+    "file"
   ],
   "dependencies": {
     "is-object": "^1.0.1",
