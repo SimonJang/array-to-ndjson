@@ -1,5 +1,5 @@
 import test from 'ava';
-import m from '.';
+import arrayToNDJSON from '.';
 
 const getStream = require('get-stream');
 
@@ -23,12 +23,12 @@ test('should fail due to invalid arguments', t => {
 	const badArray1 = ['bla', 1];
 	const badArray2 = [{name: 'Smart Object', do: someFunction}];
 
-	t.throws(() => m(badArray1), Error);
-	t.throws(() => m(badArray2), Error);
+	t.throws(() => arrayToNDJSON(badArray1), Error);
+	t.throws(() => arrayToNDJSON(badArray2), Error);
 });
 
 test('should return a readstream of ndjson qualified objects', async t => {
-	const arrayStream = m(objects);
+	const arrayStream = arrayToNDJSON(objects);
 
 	const result = await getStream.array(arrayStream);
 	t.deepEqual(result, [

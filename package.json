@@ -19,7 +19,11 @@
     "index.js"
   ],
   "keywords": [
-    ""
+		"array",
+		"object",
+		"ndjson",
+		"stream",
+		"file"
   ],
   "dependencies": {
     "is-object": "^1.0.1",
