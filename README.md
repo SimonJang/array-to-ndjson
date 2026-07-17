@@ -1,4 +1,4 @@
-# array-to-ndjson [![Build Status](https://travis-ci.org/SimonJang/array-to-ndjson.svg?branch=master)](https://travis-ci.org/SimonJang/array-to-ndjson)
+# array-to-ndjson [![CI](https://github.com/SimonJang/array-to-ndjson/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/SimonJang/array-to-ndjson/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush)
 
 > Convert an array of objects to a stream of [ndjson](http://ndjson.org/) data.
 

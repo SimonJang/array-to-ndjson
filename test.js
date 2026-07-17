@@ -1,37 +1,61 @@
-import test from 'ava';
-import arrayToNDJSON from '.';
+'use strict';
 
-const getStream = require('get-stream');
+const assert = require('node:assert/strict');
+const test = require('node:test');
+const arrayToNdjson = require('./');
 
-const objects = [
-	{
-		name: 'Foo',
-		value: 1
-	},
-	{
-		name: 'Bar',
-		value: 2
-	},
-	{
-		name: 'Foobar',
-		value: 3
-	}
-];
-
-test('should fail due to invalid arguments', t => {
-	const someFunction = item => console.log(item);
-	const badArray1 = ['bla', 1];
-	const badArray2 = [{name: 'Smart Object', do: someFunction}];
-
-	t.throws(() => arrayToNDJSON(badArray1), Error);
-	t.throws(() => arrayToNDJSON(badArray2), Error);
+const collect = stream => new Promise((resolve, reject) => {
+	const chunks = [];
+	stream.on('data', chunk => chunks.push(chunk));
+	stream.on('end', () => resolve(chunks));
+	stream.on('error', reject);
 });
 
-test('should return a readstream of ndjson qualified objects', async t => {
-	const arrayStream = arrayToNDJSON(objects);
+test('rejects input that is not an array', () => {
+	assert.throws(() => arrayToNdjson(null), {
+		name: 'TypeError',
+		message: 'Expected input to be an array of objects'
+	});
+});
 
-	const result = await getStream.array(arrayStream);
-	t.deepEqual(result, [
+test('rejects array items that are not serializable objects', () => {
+	const someFunction = item => console.log(item);
+	const undefinedJson = Object.create({toJSON: () => undefined});
+	undefinedJson.name = 'Invalid JSON object';
+	const throwingGetter = {};
+	Object.defineProperty(throwingGetter, 'value', {
+		enumerable: true,
+		get: () => {
+			throw new Error('getter failure must not leak');
+		}
+	});
+
+	assert.throws(() => arrayToNdjson(['bla', 1]), {
+		message: 'Expected every item to be a JSON-serializable object'
+	});
+	assert.throws(() => arrayToNdjson([{name: 'Smart Object', do: someFunction}]), {
+		message: 'Expected every item to be a JSON-serializable object'
+	});
+	assert.throws(() => arrayToNdjson([undefinedJson]), {
+		message: 'Expected every item to be a JSON-serializable object'
+	});
+	assert.throws(() => arrayToNdjson([throwingGetter]), {
+		message: 'Expected every item to be a JSON-serializable object'
+	});
+});
+
+test('returns an empty stream for an empty array', async () => {
+	assert.deepEqual(await collect(arrayToNdjson([])), []);
+});
+
+test('returns a readable stream of NDJSON objects', async () => {
+	const objects = [
+		{name: 'Foo', value: 1},
+		{name: 'Bar', value: 2},
+		{name: 'Foobar', value: 3}
+	];
+
+	assert.deepEqual(await collect(arrayToNdjson(objects)), [
 		'{"name":"Foo","value":1}',
 		'\n',
 		'{"name":"Bar","value":2}',

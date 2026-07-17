@@ -3,7 +3,11 @@
   "version": "1.0.1",
   "description": "Convert an array of objects to ndjson format",
   "license": "MIT",
-  "repository": "SimonJang/array-to-ndjson",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SimonJang/array-to-ndjson.git"
+  },
+  "packageManager": "npm@12.0.1",
   "author": {
     "name": "Simon",
     "email": "simon.jang.contact@gmail.com",
@@ -13,7 +17,8 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "xo && nyc ava"
+    "test": "node --test",
+    "prepublishOnly": "npm test"
   },
   "files": [
     "index.js"
@@ -26,13 +31,7 @@
     "file"
   ],
   "dependencies": {
-    "is-object": "^1.0.1",
+    "is-object": "^1.0.2",
     "stream-array": "^1.1.2"
-  },
-  "devDependencies": {
-    "ava": "^0.20.0",
-    "get-stream": "^3.0.0",
-    "nyc": "^11.0.0",
-    "xo": "^0.18.2"
   }
 }
