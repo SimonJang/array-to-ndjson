@@ -11,10 +11,10 @@ const collect = stream => new Promise((resolve, reject) => {
 	stream.on('error', reject);
 });
 
-test('rejects input that is not an array', () => {
+test('rejects non-iterable input', () => {
 	assert.throws(() => arrayToNdjson(null), {
-		name: 'TypeError',
-		message: 'Expected input to be an array of objects'
+		name: 'Error',
+		message: 'Expected every item to be a JSON-serializable object'
 	});
 });
 
@@ -69,8 +69,28 @@ test('normalizes non-Error exceptions from array iterators', () => {
 	});
 });
 
-test('returns an empty stream for an empty array', async () => {
-	assert.deepEqual(await collect(arrayToNdjson([])), []);
+test('returns an empty stream for empty iterables', async () => {
+	for (const input of [[], new Set(), (function* () {})(), '']) {
+		assert.deepEqual(await collect(arrayToNdjson(input)), []);
+	}
+});
+
+test('converts a Set in insertion order', async () => {
+	const input = new Set([{name: 'Foo'}, {name: 'Bar'}]);
+	assert.deepEqual(await collect(arrayToNdjson(input)), [
+		'{"name":"Foo"}', '\n', '{"name":"Bar"}', '\n'
+	]);
+});
+
+test('converts objects yielded by a generator in order', async () => {
+	function* objects() {
+		yield {name: 'Foo'};
+		yield {name: 'Bar'};
+	}
+
+	assert.deepEqual(await collect(arrayToNdjson(objects())), [
+		'{"name":"Foo"}', '\n', '{"name":"Bar"}', '\n'
+	]);
 });
 
 test('returns a readable stream of NDJSON objects', async () => {

@@ -27,10 +27,6 @@ const stringifyArray = data => {
 };
 
 module.exports = input => {
-	if (!Array.isArray(input)) {
-		throw new TypeError('Expected input to be an array of objects');
-	}
-
 	try {
 		return streamify(stringifyArray(input));
 	} catch (error) {
