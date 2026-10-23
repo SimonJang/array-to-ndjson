@@ -44,6 +44,31 @@ test('rejects array items that are not serializable objects', () => {
 	});
 });
 
+test('normalizes exceptions from array element getters', () => {
+	const input = Object.defineProperty([], '0', {
+		get: () => {
+			throw new RangeError('array element failure must not leak');
+		}
+	});
+
+	assert.throws(() => arrayToNdjson(input), {
+		name: 'Error',
+		message: 'Expected every item to be a JSON-serializable object'
+	});
+});
+
+test('normalizes non-Error exceptions from array iterators', () => {
+	const input = [{}];
+	input[Symbol.iterator] = () => {
+		throw 'iterator failure must not leak';
+	};
+
+	assert.throws(() => arrayToNdjson(input), {
+		name: 'Error',
+		message: 'Expected every item to be a JSON-serializable object'
+	});
+});
+
 test('returns an empty stream for an empty array', async () => {
 	assert.deepEqual(await collect(arrayToNdjson([])), []);
 });

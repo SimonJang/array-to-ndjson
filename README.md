@@ -40,6 +40,10 @@ Type: `Object[]`
 
 Array of objects that you want to convert to NDJSON format.
 
+Other iterables, such as Sets and generators, are not accepted.
+
+Non-array input throws a synchronous `TypeError`. Invalid items or errors while reading or serializing them throw a synchronous `Error` with the message `Expected every item to be a JSON-serializable object`. The converter does not log these errors.
+
 ## License
 
 MIT © [Simon](https://github.com/SimonJang)

@@ -44,4 +44,4 @@ jobs:
           package-manager-cache: false
       - name: Smoke-test the declared runtime floor
         run: >-
-          node -e "var convert = require('./'); var output = ''; var stream = convert([{ok:true}]); stream.on('data', function (chunk) { output += chunk; }); stream.on('end', function () { if (output !== '{\"ok\":true}\n') process.exit(1); });"
+          node -e "process.exitCode = 1; var convert = require('./'); var output = ''; var stream = convert([{ok:true}]); stream.on('data', function (chunk) { output += chunk; }); stream.on('end', function () { if (output === '{\"ok\":true}\n') process.exitCode = 0; });"
